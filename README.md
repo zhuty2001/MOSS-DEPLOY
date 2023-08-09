@@ -24,7 +24,76 @@
 * cudnn 8.9.3
 * 四张 NVIDIA Corporation TU104GL [Tesla T4] (rev a1)
 
-~
+#### 1.查看本地环境版本
+查看服务器是否有合适的GPU：
+
+`
 lspci | grep -i nvidia
-~
+`
+
+查看系统版本：
+
+`
+uname -m && cat /etc/*release
+`
+
+验证系统GCC版本：
+
+`
+gcc --version
+`
+#### 2.CUDA安装
+首先前往以下网址找到对应本地环境的CUDA版本：
+https://developer.nvidia.com/cuda-downloads
+
+根据本地环境，本文的版本选择如下：
+
+![image](https://github.com/zhuty2001/moss_deploy/assets/68087747/491fee0e-eacc-4c8a-a4f8-759318c5497b)
+
+在命令行中输入对应的命令下载相应的CUDA文件：
+
+`
+wget https://developer.download.nvidia.com/compute/cuda/12.2.1/local_installers/cuda_12.2.1_535.86.10_linux.run
+`
+
+禁用系统自带的显卡驱动，在命令行输入：
+
+`
+sudo touch /etc/modprobe.d/blacklist-nouveau.conf
+`
+
+`
+sudo vim /etc/modprobe.d/blacklist-nouveau.conf
+`
+
+然后将下面的内容添加到/etc/modprobe.d/blacklist-nouveau.conf中并保存:
+
+`
+blacklist nouveau
+options nouveau modeset=0
+`
+
+更新一下：
+
+`
+sudo update-initramfs -u
+`
+
+输出：
+
+`
+update-initramfs: Generating /boot/initrd.img-5.4.0-110-generic
+`
+
+完成上述步骤后需重启系统。
+
+完成重启之后即可进行CUDA的安装，同样对应相应的CUDA版本输入以下指令进行安装：
+`
+sudo sh cuda_12.2.1_535.86.10_linux.run
+`
+
+
+
+
+
 
