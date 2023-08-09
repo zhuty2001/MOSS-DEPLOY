@@ -88,9 +88,67 @@ update-initramfs: Generating /boot/initrd.img-5.4.0-110-generic
 完成上述步骤后需重启系统。
 
 完成重启之后即可进行CUDA的安装，同样对应相应的CUDA版本输入以下指令进行安装：
+
 `
 sudo sh cuda_12.2.1_535.86.10_linux.run
 `
+
+#### 3.将CUDA路径加入系统环境
+首先使用vim打开~/.bashrc:
+
+`
+vim ~/.bashrc
+`
+
+然后将下面的内容放在.bashrc文件的最后面:
+
+`
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
+export PATH=$PATH:/usr/local/cuda/bin
+export CUDA_HOME=$CUDA_HOME:/usr/local/cuda
+`
+
+保存并退出后在命令行中输入以下指令来更新系统：
+
+`
+source ~/.bashrc
+sudo ldconfig
+`
+
+最后可以使用以下指令验证是否成功安装：
+
+`
+nvcc -V
+`
+#### 4.cuDNN安装
+
+首先进入以下网页找到对应系统环境的cuDNN版本：
+https://developer.nvidia.com/rdp/cudnn-download
+
+下载相应的tar文件并将tar文件上传到设备上：
+
+![image](https://github.com/zhuty2001/moss_deploy/assets/68087747/f472a3e5-9dbb-4e3d-b5ec-041813befe1b)
+
+解压压缩文件：
+
+`
+tar -xvf cudnn-linux-x86_64-8.9.3.28_cuda12-archive.tar.xz
+`
+
+使用以下命令将.h文件和lib文件放到cuda文件夹目录下,注意cudnn文件名需与自己的版本对应：
+
+`
+sudo cp cudnn-linux-x86_64-8.9.3.28_cuda12-archive/include/cudnn*.h /usr/local/cuda-12.2/include
+sudo cp -p cudnn-linux-x86_64-8.9.3.28_cuda12-archive//lib/libcudnn* /usr/local/cuda-12.2/lib64
+sudo chmod a+r /usr/local/cuda-12.2/include/cudnn*.h /usr/local/cuda-12.2/lib64/libcudnn*
+`
+
+最后可以使用如下命令验证是否安装成功：
+
+`
+cat /usr/local/cuda/include/cudnn_version.h | grep CUDNN_MAJOR -A 2
+`
+
 
 
 
