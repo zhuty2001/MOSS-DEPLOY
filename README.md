@@ -27,21 +27,22 @@
 #### 1.查看本地环境版本
 查看服务器是否有合适的GPU：
 
-`
+```bash
 lspci | grep -i nvidia
-`
+```
 
 查看系统版本：
 
-`
+```bash
 uname -m && cat /etc/*release
-`
+```
 
 验证系统GCC版本：
 
-`
+```bash
 gcc --version
-`
+```
+
 #### 2.CUDA安装
 首先前往以下网址找到对应本地环境的CUDA版本：
 https://developer.nvidia.com/cuda-downloads
@@ -52,74 +53,74 @@ https://developer.nvidia.com/cuda-downloads
 
 在命令行中输入对应的命令下载相应的CUDA文件：
 
-`
+```bash
 wget https://developer.download.nvidia.com/compute/cuda/12.2.1/local_installers/cuda_12.2.1_535.86.10_linux.run
-`
+```
 
 禁用系统自带的显卡驱动，在命令行输入：
 
-`
+```bash
 sudo touch /etc/modprobe.d/blacklist-nouveau.conf
-`
+```
 
-`
+```bash
 sudo vim /etc/modprobe.d/blacklist-nouveau.conf
-`
+```
 
 然后将下面的内容添加到/etc/modprobe.d/blacklist-nouveau.conf中并保存:
 
-`
+```bash
 blacklist nouveau
 options nouveau modeset=0
-`
+```
 
 更新一下：
 
-`
+```bash
 sudo update-initramfs -u
-`
+```
 
 输出：
 
-`
+```bash
 update-initramfs: Generating /boot/initrd.img-5.4.0-110-generic
-`
+```
 
 完成上述步骤后需重启系统。
 
 完成重启之后即可进行CUDA的安装，同样对应相应的CUDA版本输入以下指令进行安装：
 
-`
+```bash
 sudo sh cuda_12.2.1_535.86.10_linux.run
-`
+```
 
 #### 3.将CUDA路径加入系统环境
 首先使用vim打开~/.bashrc:
 
-`
+```bash
 vim ~/.bashrc
-`
+```
 
 然后将下面的内容放在.bashrc文件的最后面:
 
-`
+```bash
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
 export PATH=$PATH:/usr/local/cuda/bin
 export CUDA_HOME=$CUDA_HOME:/usr/local/cuda
-`
+```
 
 保存并退出后在命令行中输入以下指令来更新系统：
 
-`
+```bash
 source ~/.bashrc
 sudo ldconfig
-`
+```
 
 最后可以使用以下指令验证是否成功安装：
 
-`
+```bash
 nvcc -V
-`
+```
 #### 4.cuDNN安装
 
 首先进入以下网页找到对应系统环境的cuDNN版本：
@@ -131,23 +132,23 @@ https://developer.nvidia.com/rdp/cudnn-download
 
 解压压缩文件：
 
-`
+```bash
 tar -xvf cudnn-linux-x86_64-8.9.3.28_cuda12-archive.tar.xz
-`
+```
 
 使用以下命令将.h文件和lib文件放到cuda文件夹目录下,注意cudnn文件名需与自己的版本对应：
 
-`
+```bash
 sudo cp cudnn-linux-x86_64-8.9.3.28_cuda12-archive/include/cudnn*.h /usr/local/cuda-12.2/include
 sudo cp -p cudnn-linux-x86_64-8.9.3.28_cuda12-archive//lib/libcudnn* /usr/local/cuda-12.2/lib64
 sudo chmod a+r /usr/local/cuda-12.2/include/cudnn*.h /usr/local/cuda-12.2/lib64/libcudnn*
-`
+```
 
 最后可以使用如下命令验证是否安装成功：
 
-`
+```bash
 cat /usr/local/cuda/include/cudnn_version.h | grep CUDNN_MAJOR -A 2
-`
+```
 
 
 
