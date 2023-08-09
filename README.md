@@ -1,2 +1,8 @@
-# moss_deploy
-A tutorial on deploying the moss framework locally
+# Moss Deploy
+将moss框架部署到本地的教程
+
+## 介绍
+本文档完整介绍了将moss框架部署到本地GPU服务器上所需要的环境配置、部署过程、使用方法以及可能遇到的问题。
+
+## 环境配置
+首先，本地部署时使用的适配环境是使用FinalShell,ssh远程连接GPU服务器，版本为Ubuntu 20.04 
