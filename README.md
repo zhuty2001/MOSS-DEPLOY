@@ -24,5 +24,7 @@
 * cudnn 8.9.3
 * 四张 NVIDIA Corporation TU104GL [Tesla T4] (rev a1)
 
-### 
+~
+lspci | grep -i nvidia
+~
 
