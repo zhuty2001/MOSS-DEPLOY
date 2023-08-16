@@ -56,4 +56,44 @@ fp16
 accelerate configuration saved at /home/winner/.cache/huggingface/accelerate/default_config.yaml  
 ```
 
-接下来找到'MOSS/configs/sft.yaml'文件
+## 修改本地文件
+
+接下来找到`MOSS/configs/sft.yaml`文件,需根据本地配置及需求进行更改
+
+![1692174941645](https://github.com/zhuty2001/moss_deploy/assets/68087747/bc486542-a649-4515-b426-c5a339640d73)
+
+接下来需要准备训练数据集，将对应的训练数据按[conversation_without_plugins](https://github.com/OpenLMLab/MOSS/tree/main/SFT_data/conversations/conversation_without_plugins) 格式处理并放到 `SFT_data` 目录中即可。
+
+## 训练网络
+
+最后，我们在`MOSS`文件夹下创建文件`run.sh`并将以下内容放入
+
+```bash
+num_machines=1
+num_processes=$((num_machines * 4))
+machine_rank=0
+
+accelerate launch \
+	--config_file ./configs/sft.yaml \
+	--num_processes $num_processes \
+	--num_machines $num_machines \
+	--machine_rank $machine_rank \
+	--deepspeed_multinode_launcher standard finetune_moss.py \
+	--model_name_or_path fnlp/moss-moon-003-base \
+	--data_dir ./SFT_data \
+	--output_dir ./ckpts/moss-moon-003-sft \
+	--log_dir ./train_logs/moss-moon-003-sft \
+	--n_epochs 2 \
+	--train_bsz_per_gpu 4 \
+	--eval_bsz_per_gpu 4 \
+	--learning_rate 0.000015 \
+	--eval_step 200 \
+	--save_step 2000
+```
+其中`num_machines`以及`num_processes`根据本地情况调整，模型地址，数据目录等信息同理。
+
+最后在命令行中运行`run.sh`即可完成对模型的训练。
+
+```bash
+bash run.sh
+```
